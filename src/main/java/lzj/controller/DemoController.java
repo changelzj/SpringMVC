@@ -1,23 +1,20 @@
 package lzj.controller;
 
+import lzj.entity.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Map;
 
 @Controller
-@SessionAttributes(value = {"user"})
 @RequestMapping("test")
 public class DemoController {
 
@@ -34,15 +31,58 @@ public class DemoController {
 
     }
 
-    @GetMapping("getheader")
-    public void header(@RequestHeader Map map) {
+    /**
+     * 绑定请求参数
+     */
+    @RequestMapping("testRequestParam")
+    public void testRequestParam(@RequestParam(value = "uname", required = true) String uname,
+                                 @RequestParam(value = "pwd", required = false) String pwd,
+                                 @RequestParam(value = "age", required = false, defaultValue = "12") int age) {
 
+        System.out.println(uname + pwd + age);
+        return;
     }
+
+    @RequestMapping("testRequestParams")
+    public void testRequestParam(@RequestParam Map<String, Object> map) {
+        System.out.println(map);
+        return;
+    }
+
+
+    @GetMapping("getheaders")
+    public void headers(@RequestHeader Map map) {
+        System.out.println(map);
+    }
+
+    /**
+     * 请求头信息
+     * @param agent
+     */
+    @GetMapping("getheader")
+    public void header(@RequestHeader("user-agent") String agent) {
+        System.out.println(agent);
+    }
+
+
+
 
     @GetMapping("getcookie")
-    public void cookie(@CookieValue(value = "jsessionId", required = false) String sid) {
-
+    public void cookie(@CookieValue(value = "JSESSIONID", required = false) String sid) {
+        System.out.println(sid);
     }
+
+    /**
+     * pojo 包装  级联属性支持
+     * @param user
+     * @return
+     */
+    @RequestMapping("testpojo")
+    public String testpojo(User user) {
+        System.out.println(user);
+        return "success";
+    }
+
 
     @GetMapping("testServletAPI")
     public void testServletAPI(HttpServletRequest request, HttpServletResponse response, Writer writer)
@@ -50,7 +90,11 @@ public class DemoController {
         writer.write("hello world");
     }
 
-
+    /**
+     * modelandview存放数据，包含视图和模型信息
+     * model内的数据最终放在req域对象
+     * @return
+     */
     @GetMapping("mv")
     public ModelAndView testmv() {
         ModelAndView mv = new ModelAndView("test1");
@@ -58,19 +102,31 @@ public class DemoController {
         return mv;
     }
 
-    @GetMapping("map")
+    /**
+     * 目标方法传入map，用于存放信息到域对象
+     * @param map
+     * @return
+     */
+    @GetMapping("testMap")
     public String testMap(Map<String, Object> map) {
-        map.put("as","as");
+        map.put("as", "胶粘");
         return "test1";
     }
 
-    @GetMapping("testSessionAttr")
-    public ModelAndView testSessionAttr() {
-        ModelAndView mv = new ModelAndView("test1");
-        mv.addObject("date", new Date());
-        mv.addObject("user", "user");
-        return mv;
+    /**
+     * 目标方法传入model，用于存放信息到域对象
+     * 除了map  model  ,modelmap类型也可以
+     * @param map
+     * @return
+     */
+    @GetMapping("testModel")
+    public String testModel(Model model) {
+        model.addAttribute("as", "胶粘");
+        return "test1";
     }
+
+
+
 
 }
 

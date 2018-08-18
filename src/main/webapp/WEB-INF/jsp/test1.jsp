@@ -6,11 +6,15 @@
     <title>test jsp</title>
 </head>
 <body>
-    ${requestScope.date}
+    ${requestScope.date} <br>
 
-    ${requestScope.as}
+    ${requestScope.as}<br>
 
-    ${sessionScope.user}
+    ${sessionScope.user}<br>
+    ${sessionScope.name}<br>
+
+    ${requestScope.user}<br>
+    ${requestScope.name}<br>
 </body>
 </html>
 

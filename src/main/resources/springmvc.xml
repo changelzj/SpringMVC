@@ -16,8 +16,11 @@
 
 
     <context:component-scan base-package="lzj.controller"/>
-    <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <!--根据路径直接访问，不经controller 直接访问页面，必须配置 <mvc:annotation-driven/>才能正常运行-->
+    <mvc:view-controller path="test3" view-name="test3"/>
 
     <!--视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
