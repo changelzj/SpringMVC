@@ -16,17 +16,53 @@
 
 
     <context:component-scan base-package="lzj.controller"/>
+
+    <!--会注册requestmappinghandlermapping requestmappinghandleradapter exceptionhandlerexceptionresolver
+    能够支持conversionservice对表单参数进行类型转换
+    支持使用注解对表单参数格式化
+    支持jsr303验证
+    支持requestbody responcebody注解-->
     <mvc:annotation-driven/>
+
+    <!--定义了一个defaultservlethttprequesthandler对象，对访问的请求进行筛选
+    智能判断发送的请求是否做了映射，是则直接处理，否则寻找目标资源（实际上移交给是tomcat默认处理静态资源的defaultservlet进行处理了）-->
     <mvc:default-servlet-handler/>
 
     <!--根据路径直接访问，不经controller 直接访问页面，必须配置 <mvc:annotation-driven/>才能正常运行-->
     <mvc:view-controller path="test3" view-name="test3"/>
+
+    <!--配置拦截器
+    当有多个拦截器
+    preHandle按照配置的顺序执行
+    postHandle按照配置的相反顺序执行
+    afterCompletion按照配置的相反顺序执行 -->
+    <mvc:interceptors>
+        <!---->
+        <bean class="lzj.interceptor.FirstInterceptor"/>
+
+        <!--配置拦截器作用或不能作用的路径-->
+        <mvc:interceptor>
+            <mvc:mapping path="/interceptor/**"/>
+            <!--<mvc:exclude-mapping path=""-->
+            <bean class="lzj.interceptor.SecondInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/interceptor/**"/>
+            <!--<mvc:exclude-mapping path=""-->
+            <bean class="lzj.interceptor.ThirdInterceptor"/>
+        </mvc:interceptor>
+
+    </mvc:interceptors>
 
     <!--视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
 
 </beans>
 

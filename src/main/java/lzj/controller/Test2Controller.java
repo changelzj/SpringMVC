@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @SessionAttributes(value = {"user"})
-@RequestMapping("test3")
+@RequestMapping("test2")
 public class Test2Controller {
 
     /**
@@ -71,6 +74,19 @@ public class Test2Controller {
         return responseEntity;
     }
 
+    /**
+     * 文件上传
+     * @param files
+     */
+    @RequestMapping("upload")
+    public void upload(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        try {
+            file.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
